@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  CUSTOMER
+  TECHNICIAN
+  ADMIN
+}
+
+enum BookingStatus {
+  REQUESTED
+  ACCEPTED
+  DECLINED
+  PAID
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id                String             @id @default(uuid())
+  name              String
+  email             String             @unique
+  password          String
+  role              Role
+  isBanned          Boolean            @default(false)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  technicianProfile TechnicianProfile?
+  bookings          Booking[]          @relation("CustomerBookings")
+  technicianJobs    Booking[]          @relation("TechnicianBookings")
+  services          Service[]
+}
+
+model TechnicianProfile {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id])
+  skills       String[]
+  experience   Int
+  hourlyRate   Float
+  availability String[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  description String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  services    Service[]
+}
+
+model Service {
+  id           String   @id @default(uuid())
+  name         String
+  description  String
+  price        Float
+  categoryId   String
+  category     Category @relation(fields: [categoryId], references: [id])
+  technicianId String
+  technician   User     @relation(fields: [technicianId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  bookings     Booking[]
+}
+
+model Booking {
+  id           String        @id @default(uuid())
+  customerId   String
+  customer     User          @relation("CustomerBookings", fields: [customerId], references: [id])
+  technicianId String
+  technician   User          @relation("TechnicianBookings", fields: [technicianId], references: [id])
+  serviceId    String
+  service      Service       @relation(fields: [serviceId], references: [id])
+  date         DateTime
+  timeSlot     String
+  status       BookingStatus @default(REQUESTED)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  payment      Payment?
+  review       Review?
+}
+
+model Payment {
+  id            String        @id @default(uuid())
+  transactionId String?
+  bookingId     String        @unique
+  booking       Booking       @relation(fields: [bookingId], references: [id])
+  amount        Float
+  method        String
+  provider      String        @default("Stripe")
+  status        PaymentStatus @default(PENDING)
+  paidAt        DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  bookingId String   @unique
+  booking   Booking  @relation(fields: [bookingId], references: [id])
+  rating    Int
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
