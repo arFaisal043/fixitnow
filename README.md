@@ -1,125 +1,132 @@
-# Assignment 4 - Backend Project
+# FixItNow 🔧
 
-## 🔍 Find Your Assignment
+**Your Trusted Home Service Platform (Backend API)**
 
-> 💡 Check your Student ID by clicking your **profile image** on the [Programming Hero Website](https://web.programming-hero.com/profile).
-
-| Last Digit of Student ID | Assignment |
-|:------------------------:|------------|
-| **0, 1, 2, 3** | [RentNest](./1-RentNest.md) 🏠 |
-| **4, 5, 6** | [GearUp](./2-GearUp.md) 🏋️ |
-| **7, 8, 9** | [FixItNow](./3-FixItNow.md) 🔧 |
-
----
-
-## ⚠️ Mandatory Requirements
-
-> [!CAUTION]
-> **MANDATORY - READ CAREFULLY**
-> 
-> The following **SIX requirements are MANDATORY**:
-> 1. **API Documentation** - Provide Postman collection or Swagger/OpenAPI docs covering all endpoints
-> 2. **Consistent Error Responses** - All errors must return structured JSON (`{ success, message, errorDetails }`)
-> 3. **Commits** - 20 meaningful backend commits with descriptive messages
-> 4. **Input Validation** - Server-side validation on all endpoints with proper error messages
-> 5. **Admin Credentials** - Provide working admin email & password
-> 6. **Payment Integration** - Must integrate **Stripe** or **SSLCommerz** for processing payments. Simulated/fake payments (Cash on Delivery, Pay Later) are **NOT** accepted.
->
-> ❌ **Failure to complete any of these = 0 MARKS**
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Stripe](https://img.shields.io/badge/Stripe-008CDD?style=for-the-badge&logo=stripe&logoColor=white)
 
 ---
 
-## 📊 Marks Distribution
+## 📖 Overview
 
-| # | Category | Weight | Details |
-|:-:|----------|:------:|---------|
-| 1 | API Design & Documentation | 20% | RESTful endpoints, Postman/Swagger docs, response format |
-| 2 | Database Design & Schema | 20% | Prisma schema, relations, migrations, seed script |
-| 3 | Commit History | 10% | 20 meaningful backend commits |
-| 4 | Error Handling & Validation | 10% | Input validation, structured error responses, 404 handling |
-| 5 | Core Functionality | 20% | Auth, CRUD, role-based access, middleware |
-| 6 | Payment Integration | 10% | Stripe or SSLCommerz integration, payment endpoints, payment status tracking |
-| 7 | Video Explanation | 10% | 3-5 min API walkthrough video |
+**FixItNow** is a robust, highly modular backend API built for a home services marketplace. It provides the core infrastructure connecting Customers with professional Technicians for various household services (plumbing, electrical work, cleaning, etc.). 
+
+The platform supports a comprehensive ecosystem featuring complex user roles, dynamic service categories, seamless booking workflows, integrated secure Stripe payments, and a review system—all governed by platform administrators.
 
 ---
 
-## 📅 Timeline
+## 🚀 Features
 
-| Deadline | Maximum Marks |
-|----------|:-------------:|
-| **July 09, 2026, 11:59 PM** | 60 Marks |
-| **July 10, 2026, 11:59 PM** | 50 Marks |
-| **From July 11, 2026 To July 31, 2026, 11:59 PM** | 30 Marks |
+- **Robust Authentication:** Secure JWT-based Access & Refresh token architecture.
+- **Role-Based Access Control (RBAC):** Distinct privileges for `ADMIN`, `TECHNICIAN`, and `CUSTOMER`.
+- **Technician Profiles:** Professionals can establish profiles, list their specific skills, and declare their hourly rates and availability.
+- **Dynamic Services & Categories:** Admins have full CRUD control over service categories and the individual services offered within them.
+- **Booking Management:** Customers can book specific time slots with chosen technicians. Technicians can manage their booking statuses (`REQUESTED`, `ACCEPTED`, `COMPLETED`, etc.).
+- **Stripe Integration:** Secure backend processing to generate Payment Intents for completed jobs.
+- **Review System:** Customers can leave ratings and feedback for technicians upon successful job completion.
+- **Centralized Error Handling:** Consistent API responses structured with a standardized `success`, `message`, `data`/`errorDetails` format.
 
 ---
 
-## 📦 What to Submit
+## ⚙️ Tech Stack
 
-| Item | Required |
-|------|:--------:|
-| Backend GitHub Repo | ✅ |
-| Live API URL | ✅ |
-| API Documentation (Postman/Swagger) | ✅ |
-| Demo Video (3-5 min) | ✅ |
-| Admin Credentials | ✅ |
+- **Runtime:** Node.js v24+
+- **Framework:** Express.js (with modular architecture)
+- **Language:** TypeScript
+- **ORM:** Prisma
+- **Database:** PostgreSQL (with Prisma Adapter)
+- **Authentication:** JSON Web Tokens (JWT) & bcrypt for hashing
+- **Payments:** Stripe API
 
-**Example:**
+---
+
+## 🛠️ Getting Started
+
+### Prerequisites
+- Node.js (v24 or later)
+- PostgreSQL Database
+- Stripe Account (for Secret Keys)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/arFaisal043/fixitnow.git
+   cd fixitnow
+   ```
+
+2. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Environment Setup**
+   Create a `.env` file in the root directory based on `.env.example`:
+   ```env
+   NODE_ENV=development
+   PORT=5000
+   DATABASE_URL="postgresql://user:password@localhost:5432/fixitnow?sslmode=require"
+   BCRYPT_SALT_ROUNDS=12
+   JWT_ACCESS_SECRET=your_access_secret
+   JWT_REFRESH_SECRET=your_refresh_secret
+   JWT_ACCESS_EXPIRES_IN=1h
+   JWT_REFRESH_EXPIRES_IN=365d
+   STRIPE_SECRET_KEY=sk_test_...
+   STRIPE_WEBHOOK_SECRET=whsec_...
+   ```
+
+4. **Database Migration & Generation**
+   ```bash
+   npx prisma generate
+   npx prisma db push
+   ```
+
+5. **Start the Development Server**
+   ```bash
+   npm run dev
+   ```
+
+---
+
+## 📚 API Documentation
+
+For detailed information on the request structures, responses, headers, and specific endpoints, please refer to our documentation:
+
+👉 **[View Live Postman Collection](https://documenter.getpostman.com/view/36497799/2sBY4TpJ6R)**
+
+👉 **[View Local API Documentation](./API_DOCUMENTATION.md)**
+
+---
+
+## 📁 Project Structure
+
+This project follows the **Thin Controller, Fat Service** principle for maximum maintainability:
+
+```text
+src/
+├── app/
+│   ├── config/          # Environment variables & constants
+│   ├── middlewares/     # Global auth, validation, and error handlers
+│   ├── modules/         # Feature-based modular architecture (Auth, Admin, Booking, etc.)
+│   ├── routes/          # Centralized route aggregator
+│   └── utils/           # Helper functions (Prisma client, async wrappers, etc.)
+├── server.ts            # Application bootstrap
+└── app.ts               # Express configuration
 ```
-Backend Repo     : https://github.com/your-username/rentnest-backend
-Live API         : https://rentnest-api.vercel.app
-API Docs         : https://documenter.getpostman.com/view/xxx
-Demo Video       : https://drive.google.com/file/d/xxx/view
-Admin Email      : admin@rentnest.com
-Admin Password   : admin123
-```
 
 ---
 
-## 🎥 Video Explanation Guide
-
-**Duration:** 3-5 minutes | **Language:** English or Bengali
-
-**What to Cover:**
-1. Project overview & API architecture
-2. Demonstrate all 3 roles working via Postman/Thunder Client (Customer/Tenant, Provider/Landlord/Technician, Admin)
-3. Show CRUD operations on key endpoints
-4. Demonstrate error handling & validation in action
-5. Briefly explain one technical challenge you solved
-
-**Recording Options:**
-- **Loom** - Record & share link directly
-- **OBS** - Record & upload to Google Drive (set "Anyone with link" access)
+## 🤝 Contribution Guidelines
+Contributions, issues, and feature requests are welcome! 
+1. Fork the project.
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
 
 ---
-
-## 🛠️ Tech Stack
-
-### Backend
-| Technology | Purpose |
-|------------|---------|
-| Node.js + Express | REST API |
-| TypeScript | Type safety (recommended) |
-| Postgres + Prisma | Database + ORM |
-| JWT | Authentication |
-
-### Deployment
-| Service | Purpose |
-|---------|---------| 
-| Vercel/Render | Backend API deployment |
-
----
-
-## 🎯 Key Rules
-
-- **Roles**: Each project has 3 fixed roles. Users select during registration.
-- **Payment**: Payment integration is **MANDATORY**. You must integrate either **Stripe** or **SSLCommerz** for processing payments. Include endpoints for creating payment intents/sessions, handling payment confirmations, and tracking payment status.
-- **No Frontend Required**: This is a backend-only assignment. Test your API via Postman/Thunder Client.
-- **Flexibility**: Endpoints listed in each variant are examples. Modify as needed.
-
----
-
-## ⚠️ Important Notes
-
-> **Plagiarism** = 0 Marks. All work must be original.
-
-**Good luck! Build a rock-solid backend you're proud of.** 🚀
+*Built with passion for clean code and seamless services.*

@@ -223,8 +223,9 @@ Password: admin123
 - **Body:**
 ```json
 {
-  "bio": "Expert electrician with 10 years experience",
-  "experience": "10 Years"
+  "skills": ["Plumbing", "Electrical"],
+  "experience": 10,
+  "hourlyRate": 50
 }
 ```
 
