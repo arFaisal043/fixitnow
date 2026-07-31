@@ -45,7 +45,50 @@ const registerUserIntoDB = async (payload: any) => {
 };
 
 const loginUser = async (payload: any) => {
-  return null;
+  const { email, password } = payload;
+
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (!user) {
+    throw new Error('User does not exist');
+  }
+
+  const isPasswordMatched = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordMatched) {
+    throw new Error('Password does not match');
+  }
+
+  const jwtPayload = {
+    id: user.id,
+    email: user.email,
+    role: user.role,
+  };
+
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string
+  );
+
+  const refreshToken = createToken(
+    jwtPayload,
+    config.jwt_refresh_secret as string,
+    config.jwt_refresh_expires_in as string
+  );
+
+  return {
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
+    accessToken,
+    refreshToken,
+  };
 };
 
 const getMe = async (email: string) => {

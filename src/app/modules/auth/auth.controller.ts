@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { AuthService } from './auth.service';
+import config from '../../config';
 
 const registerUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -16,11 +17,20 @@ const registerUser = async (req: Request, res: Response, next: NextFunction) => 
 
 const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await AuthService.loginUser(req.body);
+    const { refreshToken, accessToken, user } = await AuthService.loginUser(req.body);
+
+    res.cookie('refreshToken', refreshToken, {
+      secure: config.env === 'production',
+      httpOnly: true,
+    });
+
     res.status(200).json({
       success: true,
       message: 'User logged in successfully',
-      data: result,
+      data: {
+        user,
+        token: accessToken,
+      },
     });
   } catch (err) {
     next(err);
