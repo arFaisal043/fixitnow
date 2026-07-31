@@ -1,176 +1,151 @@
-# FixItNow API Documentation & Testing Guide
+# FixItNow Complete API Documentation
 
-This document outlines all the available API endpoints for the FixItNow platform, including the required headers, sample input data, and expected output data.
-
-**Base URL**: `http://localhost:5000/api`
+Base URL: `http://localhost:5000/api`
 
 ---
 
-## 1. Auth Module (`/api/auth`)
+## 1. Auth Module
 
-### 1.1 Register User
-- **URL**: `POST /auth/register`
-- **Description**: Register a new customer or technician.
-- **Headers**: `Content-Type: application/json`
-- **Input Body**:
+### Register a User
+- **Method:** `POST`
+- **Endpoint:** `/auth/register`
+- **Headers:** None
+- **Body:**
 ```json
 {
   "name": "John Doe",
   "email": "john@example.com",
   "password": "password123",
-  "role": "CUSTOMER" // Or "TECHNICIAN"
+  "role": "CUSTOMER" // or "TECHNICIAN"
 }
 ```
-- **Output Response (201 Created)**:
+- **Response (201 Created):**
 ```json
 {
   "success": true,
+  "statusCode": 201,
   "message": "User registered successfully",
   "data": {
-    "user": {
-      "id": "uuid",
-      "name": "John Doe",
-      "email": "john@example.com",
-      "role": "CUSTOMER"
-    },
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    "id": "uuid",
+    "name": "John Doe",
+    "email": "john@example.com",
+    "role": "CUSTOMER"
   }
 }
 ```
 
-### 1.2 Login User
-- **URL**: `POST /auth/login`
-- **Description**: Login an existing user and get a JWT token.
-- **Headers**: `Content-Type: application/json`
-- **Input Body**:
+### Login a User
+- **Method:** `POST`
+- **Endpoint:** `/auth/login`
+- **Headers:** None
+- **Body:**
 ```json
 {
   "email": "john@example.com",
   "password": "password123"
 }
 ```
-- **Output Response (200 OK)**:
+- **Response (200 OK):**
 ```json
 {
   "success": true,
+  "statusCode": 200,
   "message": "User logged in successfully",
   "data": {
-    "user": { "id": "uuid", "name": "John Doe", "email": "john@example.com", "role": "CUSTOMER" },
-    "token": "eyJhbGci..."
+    "user": {
+      "id": "uuid",
+      "email": "john@example.com",
+      "role": "CUSTOMER"
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI..."
   }
 }
 ```
 
-### 1.3 Get Current User (Me)
-- **URL**: `GET /auth/me`
-- **Description**: Fetch the currently logged-in user details.
-- **Headers**: `Authorization: Bearer <your_jwt_token>`
-- **Output Response (200 OK)**:
+### Get My Profile
+- **Method:** `GET`
+- **Endpoint:** `/auth/me`
+- **Headers:** `Authorization: <token>`
+- **Response (200 OK):**
 ```json
 {
   "success": true,
-  "message": "User fetched successfully",
+  "statusCode": 200,
+  "message": "User profile retrieved successfully",
   "data": {
-    "user": { "id": "uuid", "name": "John Doe", "email": "john@example.com", "role": "CUSTOMER" }
+    "id": "uuid",
+    "name": "John Doe",
+    "email": "john@example.com",
+    "role": "CUSTOMER"
   }
 }
 ```
 
 ---
 
-## 2. User Module (Admin Only) (`/api/admin/users`)
+## 2. Category Module
 
-### 2.1 Get All Users
-- **URL**: `GET /admin/users`
-- **Description**: Fetch all users in the system.
-- **Headers**: `Authorization: Bearer <admin_jwt_token>`
-- **Output Response (200 OK)**:
+### Get All Categories
+- **Method:** `GET`
+- **Endpoint:** `/categories`
+- **Headers:** None
+- **Response (200 OK):**
 ```json
 {
   "success": true,
-  "message": "Users fetched successfully",
+  "statusCode": 200,
+  "message": "Categories fetched successfully",
   "data": [
     {
       "id": "uuid",
-      "name": "Jane Technician",
-      "email": "jane@example.com",
-      "role": "TECHNICIAN",
-      "isBanned": false,
-      "createdAt": "2023-10-10T12:00:00.000Z"
+      "name": "Plumbing",
+      "description": "All plumbing related tasks"
     }
   ]
 }
 ```
 
-### 2.2 Update User Status (Ban/Unban)
-- **URL**: `PATCH /admin/users/:id/status`
-- **Description**: Ban or unban a user.
-- **Headers**: `Authorization: Bearer <admin_jwt_token>`
-- **Input Body**:
-```json
-{
-  "isBanned": true
-}
-```
-- **Output Response (200 OK)**:
-```json
-{
-  "success": true,
-  "message": "User status updated successfully",
-  "data": { "id": "uuid", "name": "Jane", "email": "jane@example.com", "role": "TECHNICIAN", "isBanned": true }
-}
-```
-
----
-
-## 3. Category Module (`/api/categories`)
-
-### 3.1 Get All Categories
-- **URL**: `GET /categories`
-- **Description**: Fetch all service categories.
-- **Headers**: None (Public)
-- **Output Response (200 OK)**:
-```json
-{
-  "success": true,
-  "message": "Categories fetched successfully",
-  "data": [
-    { "id": "uuid", "name": "Plumbing", "description": "All plumbing related services", "createdAt": "..." }
-  ]
-}
-```
-
-### 3.2 Create Category
-- **URL**: `POST /categories`
-- **Description**: Create a new category.
-- **Headers**: `Authorization: Bearer <admin_jwt_token>`
-- **Input Body**:
+### Create Category (Admin Only)
+- **Method:** `POST`
+- **Endpoint:** `/categories`
+- **Headers:** `Authorization: <token>`
+- **Body:**
 ```json
 {
   "name": "Electrical",
   "description": "Wiring and electrical repairs"
 }
 ```
-
----
-
-## 4. Service Module (`/api/services`)
-
-### 4.1 Get All Services
-- **URL**: `GET /services`
-- **Description**: Fetch all available services.
-- **Headers**: None (Public)
-- **Output Response (200 OK)**:
+- **Response (201 Created):**
 ```json
 {
   "success": true,
+  "statusCode": 201,
+  "message": "Category created successfully",
+  "data": { ... }
+}
+```
+
+---
+
+## 3. Service Module
+
+### Get All Services
+- **Method:** `GET`
+- **Endpoint:** `/services`
+- **Headers:** None
+- **Response (200 OK):**
+```json
+{
+  "success": true,
+  "statusCode": 200,
   "message": "Services fetched successfully",
   "data": [
     {
       "id": "uuid",
-      "name": "Fix Leaking Pipe",
-      "description": "Fix minor pipe leaks",
-      "price": 50.0,
+      "name": "Sink Repair",
+      "description": "Fix leaking sinks",
+      "price": 50,
       "categoryId": "uuid",
       "technicianId": "uuid"
     }
@@ -178,148 +153,214 @@ This document outlines all the available API endpoints for the FixItNow platform
 }
 ```
 
-### 4.2 Create Service
-- **URL**: `POST /services`
-- **Description**: Create a new service offering (Technician only).
-- **Headers**: `Authorization: Bearer <technician_jwt_token>`
-- **Input Body**:
+### Create Service (Technician Only)
+- **Method:** `POST`
+- **Endpoint:** `/services`
+- **Headers:** `Authorization: <token>`
+- **Body:**
 ```json
 {
-  "name": "Fix Leaking Pipe",
-  "description": "Fix minor pipe leaks",
-  "price": 50.0,
-  "categoryId": "<category_uuid>"
+  "name": "Sink Repair",
+  "description": "Fix leaking sinks",
+  "price": 50,
+  "categoryId": "uuid_of_category"
 }
 ```
-
----
-
-## 5. Technician Module (`/api/technicians`)
-
-### 5.1 Get All Technicians
-- **URL**: `GET /technicians`
-- **Description**: Fetch all technicians and their profiles.
-- **Headers**: None (Public)
-
-### 5.2 Update Technician Profile
-- **URL**: `PUT /technicians/profile`
-- **Description**: Update skills and experience.
-- **Headers**: `Authorization: Bearer <technician_jwt_token>`
-- **Input Body**:
-```json
-{
-  "skills": ["Plumbing", "Pipe Fitting"],
-  "experience": 5,
-  "hourlyRate": 30.5
-}
-```
-
-### 5.3 Update Availability
-- **URL**: `PUT /technicians/availability`
-- **Description**: Update technician working hours/availability.
-- **Headers**: `Authorization: Bearer <technician_jwt_token>`
-- **Input Body**:
-```json
-{
-  "availability": ["Monday 9AM-5PM", "Tuesday 9AM-5PM"]
-}
-```
-
----
-
-## 6. Booking Module (`/api/bookings`)
-
-### 6.1 Create Booking
-- **URL**: `POST /bookings`
-- **Description**: Customer requests a booking.
-- **Headers**: `Authorization: Bearer <customer_jwt_token>`
-- **Input Body**:
-```json
-{
-  "technicianId": "<user_uuid_of_technician>",
-  "serviceId": "<service_uuid>",
-  "date": "2023-11-20T10:00:00.000Z",
-  "timeSlot": "Morning"
-}
-```
-- **Output Response (201 Created)**:
+- **Response (201 Created):**
 ```json
 {
   "success": true,
+  "statusCode": 201,
+  "message": "Service created successfully",
+  "data": { ... }
+}
+```
+
+---
+
+## 4. Technician Module
+
+### Get All Technicians
+- **Method:** `GET`
+- **Endpoint:** `/technicians`
+- **Headers:** None
+- **Response (200 OK):**
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "Technicians fetched successfully",
+  "data": [
+    {
+      "id": "uuid",
+      "userId": "uuid",
+      "bio": "Experienced plumber",
+      "isAvailable": true,
+      "user": {
+        "name": "Tech Bob",
+        "email": "bob@example.com"
+      }
+    }
+  ]
+}
+```
+
+### Get Technician Details
+- **Method:** `GET`
+- **Endpoint:** `/technicians/:id`
+- **Headers:** None
+- **Response (200 OK):** (Includes their offered services & reviews)
+
+### Update Profile (Technician Only)
+- **Method:** `PATCH`
+- **Endpoint:** `/technicians/profile`
+- **Headers:** `Authorization: <token>`
+- **Body:**
+```json
+{
+  "bio": "Expert electrician with 10 years experience",
+  "experience": "10 Years"
+}
+```
+
+### Update Availability (Technician Only)
+- **Method:** `PATCH`
+- **Endpoint:** `/technicians/availability`
+- **Headers:** `Authorization: <token>`
+- **Body:**
+```json
+{
+  "isAvailable": false
+}
+```
+
+---
+
+## 5. Booking Module
+
+### Create Booking (Customer Only)
+- **Method:** `POST`
+- **Endpoint:** `/bookings`
+- **Headers:** `Authorization: <token>`
+- **Body:**
+```json
+{
+  "technicianId": "uuid_of_technician",
+  "serviceId": "uuid_of_service",
+  "date": "2024-05-10",
+  "timeSlot": "10:00 AM"
+}
+```
+- **Response (201 Created):**
+```json
+{
+  "success": true,
+  "statusCode": 201,
   "message": "Booking created successfully",
-  "data": { "id": "uuid", "status": "REQUESTED", ... }
+  "data": {
+    "id": "uuid",
+    "status": "REQUESTED",
+    ...
+  }
 }
 ```
 
-### 6.2 Get My Bookings
-- **URL**: `GET /bookings`
-- **Description**: Get bookings for the logged-in user (Customer or Technician).
-- **Headers**: `Authorization: Bearer <your_jwt_token>`
+### Get My Bookings (Customer/Technician)
+- **Method:** `GET`
+- **Endpoint:** `/bookings`
+- **Headers:** `Authorization: <token>`
+- **Response (200 OK):** Array of bookings related to the logged-in user.
 
-### 6.3 Update Booking Status
-- **URL**: `PATCH /bookings/:id/status`
-- **Description**: Technician accepts/rejects a booking.
-- **Headers**: `Authorization: Bearer <technician_jwt_token>`
-- **Input Body**:
+### Update Booking Status (Technician Only)
+- **Method:** `PATCH`
+- **Endpoint:** `/bookings/:id/status`
+- **Headers:** `Authorization: <token>`
+- **Body:**
 ```json
 {
-  "status": "ACCEPTED" // Or "REJECTED", "COMPLETED"
+  "status": "ACCEPTED" // REQUESTED, ACCEPTED, DECLINED, PAID, IN_PROGRESS, COMPLETED
 }
 ```
 
 ---
 
-## 7. Payment Module (Stripe) (`/api/payments`)
+## 6. Payment Module
 
-### 7.1 Create Payment Intent
-- **URL**: `POST /payments/create-intent`
-- **Description**: Initiates a payment for an ACCEPTED booking.
-- **Headers**: `Authorization: Bearer <customer_jwt_token>`
-- **Input Body**:
+### Create Payment Intent (Customer Only)
+- **Method:** `POST`
+- **Endpoint:** `/payments/create-intent`
+- **Headers:** `Authorization: <token>`
+- **Body:**
 ```json
 {
-  "bookingId": "<booking_uuid>"
+  "bookingId": "uuid_of_booking"
 }
 ```
-- **Output Response (201 Created)**:
+- **Response (201 Created):**
 ```json
 {
   "success": true,
+  "statusCode": 201,
   "message": "Payment intent created",
   "data": {
-    "clientSecret": "pi_3O...",
+    "clientSecret": "pi_3..._secret_...",
     "paymentId": "uuid"
   }
 }
 ```
 
-### 7.2 Stripe Webhook
-- **URL**: `POST /payments/webhook`
-- **Description**: Automated webhook called directly by Stripe servers to confirm payment.
-- **Headers**: `stripe-signature: <signature>`
-- **Input Body**: Raw buffer from Stripe.
-
 ---
 
-## 8. Review Module (`/api/reviews`)
+## 7. Review Module
 
-### 8.1 Submit Review
-- **URL**: `POST /reviews`
-- **Description**: Customer reviews a COMPLETED booking.
-- **Headers**: `Authorization: Bearer <customer_jwt_token>`
-- **Input Body**:
+### Submit a Review (Customer Only)
+- **Method:** `POST`
+- **Endpoint:** `/reviews`
+- **Headers:** `Authorization: <token>`
+- **Body:**
 ```json
 {
-  "bookingId": "<booking_uuid>",
+  "bookingId": "uuid_of_booking",
   "rating": 5,
-  "comment": "Excellent and fast service!"
+  "comment": "Excellent service!"
 }
 ```
-- **Output Response (201 Created)**:
+- **Response (201 Created):**
 ```json
 {
   "success": true,
+  "statusCode": 201,
   "message": "Review submitted successfully",
-  "data": { "id": "uuid", "rating": 5, "comment": "Excellent and fast service!", ... }
+  "data": { ... }
+}
+```
+
+---
+
+## 8. Admin Module
+
+### Get All Users (Admin Only)
+- **Method:** `GET`
+- **Endpoint:** `/admin/users`
+- **Headers:** `Authorization: <token>`
+- **Response (200 OK):** Array of all users in the system.
+
+### Ban / Unban User (Admin Only)
+- **Method:** `PATCH`
+- **Endpoint:** `/admin/users/:id/status`
+- **Headers:** `Authorization: <token>`
+- **Body:**
+```json
+{
+  "isBanned": true
+}
+```
+- **Response (200 OK):**
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "User status updated successfully",
+  "data": { ... }
 }
 ```
