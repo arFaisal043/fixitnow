@@ -38,9 +38,16 @@ const registerUserIntoDB = async (payload: any) => {
     config.jwt_access_expires_in as string
   );
 
+  const refreshToken = createToken(
+    jwtPayload,
+    config.jwt_refresh_secret as string,
+    config.jwt_refresh_expires_in as string
+  );
+
   return {
     user,
-    token: accessToken,
+    accessToken,
+    refreshToken,
   };
 };
 
@@ -91,12 +98,46 @@ const loginUser = async (payload: any) => {
   };
 };
 
+import jwt from 'jsonwebtoken';
+
 const getMe = async (email: string) => {
   return null;
+};
+
+const refreshToken = async (token: string) => {
+  let decoded: any;
+  try {
+    decoded = jwt.verify(token, config.jwt_refresh_secret as string);
+  } catch (err) {
+    throw new Error('Invalid refresh token');
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { email: decoded.email },
+  });
+
+  if (!user) {
+    throw new Error('User does not exist');
+  }
+
+  const jwtPayload = {
+    id: user.id,
+    email: user.email,
+    role: user.role,
+  };
+
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string
+  );
+
+  return { accessToken };
 };
 
 export const AuthService = {
   registerUserIntoDB,
   loginUser,
   getMe,
+  refreshToken,
 };

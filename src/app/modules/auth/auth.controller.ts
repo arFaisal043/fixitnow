@@ -10,7 +10,11 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
     statusCode: 201,
     success: true,
     message: 'User registered successfully',
-    data: result,
+    data: {
+      user: result.user,
+      accessToken: result.accessToken,
+      refreshToken: result.refreshToken,
+    },
   });
 });
 
@@ -28,7 +32,8 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
     message: 'User logged in successfully',
     data: {
       user,
-      token: accessToken,
+      accessToken,
+      refreshToken,
     },
   });
 });
@@ -44,8 +49,21 @@ const getMe = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const refreshToken = catchAsync(async (req: Request, res: Response) => {
+  const { refreshToken } = req.body;
+  const result = await AuthService.refreshToken(refreshToken);
+  
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Access token generated successfully',
+    data: result,
+  });
+});
+
 export const AuthController = {
   registerUser,
   loginUser,
   getMe,
+  refreshToken,
 };

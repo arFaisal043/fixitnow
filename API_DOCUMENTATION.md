@@ -3,6 +3,11 @@
 Base URL: `http://localhost:5000/api`
 
 ---
+Admin Credintials:
+Email: admin@fixitnow.com
+Password: admin123
+
+---
 
 ## 1. Auth Module
 
