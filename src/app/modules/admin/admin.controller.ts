@@ -1,33 +1,29 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { AdminService } from './admin.service';
+import catchAsync from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
 
-const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const result = await AdminService.getAllUsers();
-    res.status(200).json({
-      success: true,
-      message: 'Users fetched successfully',
-      data: result,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
+const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+  const result = await AdminService.getAllUsers();
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Users fetched successfully',
+    data: result,
+  });
+});
 
-const updateUserStatus = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { id } = req.params;
-    const { isBanned } = req.body;
-    const result = await AdminService.updateUserStatus(id, isBanned);
-    res.status(200).json({
-      success: true,
-      message: 'User status updated successfully',
-      data: result,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
+const updateUserStatus = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { isBanned } = req.body;
+  const result = await AdminService.updateUserStatus(id as string, isBanned);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'User status updated successfully',
+    data: result,
+  });
+});
 
 export const AdminController = {
   getAllUsers,

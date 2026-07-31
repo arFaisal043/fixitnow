@@ -3,7 +3,7 @@ import config from '../../config';
 import prisma from '../../utils/prisma';
 
 const stripe = new Stripe(config.stripe_secret_key as string, {
-  apiVersion: '2025-01-27.acacia',
+  apiVersion: '2026-07-29.dahlia',
 });
 
 const createPaymentIntent = async (bookingId: string) => {
@@ -42,7 +42,7 @@ const handleWebhook = async (payload: Buffer, signature: string) => {
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(payload, signature, config.stripe_secret_key as string);
+    event = stripe.webhooks.constructEvent(payload, signature, config.stripe_webhook_secret as string);
   } catch (err: any) {
     throw new Error(`Webhook Error: ${err.message}`);
   }

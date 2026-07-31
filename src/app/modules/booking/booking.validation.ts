@@ -3,26 +3,23 @@ import { BookingStatus } from '@prisma/client';
 
 const createBookingValidationSchema = z.object({
   body: z.object({
-    technicianId: z.string({ required_error: 'Technician ID is required' }),
-    serviceId: z.string({ required_error: 'Service ID is required' }),
-    date: z.string({ required_error: 'Date is required' }),
-    timeSlot: z.string({ required_error: 'Time slot is required' }),
+    technicianId: z.string(),
+    serviceId: z.string(),
+    date: z.string(),
+    timeSlot: z.string(),
   }),
 });
 
 const updateBookingStatusValidationSchema = z.object({
   body: z.object({
-    status: z.enum(
-      [
-        BookingStatus.REQUESTED,
-        BookingStatus.ACCEPTED,
-        BookingStatus.DECLINED,
-        BookingStatus.PAID,
-        BookingStatus.IN_PROGRESS,
-        BookingStatus.COMPLETED,
-      ],
-      { required_error: 'Status is required' }
-    ),
+    status: z.enum([
+      BookingStatus.REQUESTED,
+      BookingStatus.ACCEPTED,
+      BookingStatus.DECLINED,
+      BookingStatus.PAID,
+      BookingStatus.IN_PROGRESS,
+      BookingStatus.COMPLETED,
+    ]),
   }),
 });
 
