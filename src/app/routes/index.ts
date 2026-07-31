@@ -9,6 +9,7 @@ import { ServiceRoutes } from '../modules/service/service.route';
 import { TechnicianRoutes } from '../modules/technician/technician.route';
 import { BookingRoutes } from '../modules/booking/booking.route';
 import { PaymentRoutes } from '../modules/payment/payment.route';
+import { ReviewRoutes } from '../modules/review/review.route';
 
 const moduleRoutes = [
   { path: '/auth', route: AuthRoutes },
@@ -17,7 +18,8 @@ const moduleRoutes = [
   { path: '/services', route: ServiceRoutes },
   { path: '/technicians', route: TechnicianRoutes },
   { path: '/bookings', route: BookingRoutes },
-  { path: '/payments', route: PaymentRoutes }
+  { path: '/payments', route: PaymentRoutes },
+  { path: '/reviews', route: ReviewRoutes }
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));
