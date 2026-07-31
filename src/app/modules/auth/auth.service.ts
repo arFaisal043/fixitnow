@@ -101,7 +101,23 @@ const loginUser = async (payload: any) => {
 import jwt from 'jsonwebtoken';
 
 const getMe = async (email: string) => {
-  return null;
+  const user = await prisma.user.findUnique({
+    where: { email },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  return user;
 };
 
 const refreshToken = async (token: string) => {

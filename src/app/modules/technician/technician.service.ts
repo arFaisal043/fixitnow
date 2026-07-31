@@ -40,15 +40,21 @@ const getTechnicianById = async (id: string) => {
 };
 
 const updateProfile = async (userId: string, payload: any) => {
+  const updateData: any = {};
+  if (payload.skills !== undefined) updateData.skills = payload.skills;
+  if (payload.experience !== undefined) updateData.experience = parseInt(String(payload.experience)) || 0;
+  if (payload.hourlyRate !== undefined) updateData.hourlyRate = parseFloat(String(payload.hourlyRate)) || 0;
+  if (payload.availability !== undefined) updateData.availability = payload.availability;
+
   const profile = await prisma.technicianProfile.upsert({
     where: { userId },
-    update: payload,
+    update: updateData,
     create: {
       userId,
-      skills: payload.skills || [],
-      experience: payload.experience || 0,
-      hourlyRate: payload.hourlyRate || 0,
-      availability: payload.availability || [],
+      skills: updateData.skills || [],
+      experience: updateData.experience || 0,
+      hourlyRate: updateData.hourlyRate || 0,
+      availability: updateData.availability || [],
     },
   });
   return profile;

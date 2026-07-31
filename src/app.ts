@@ -8,7 +8,13 @@ import notFound from './app/middlewares/notFound';
 const app: Application = express();
 
 // Parsers
-app.use(express.json());
+app.use((req, res, next) => {
+  if (req.originalUrl === '/api/payments/webhook') {
+    next();
+  } else {
+    express.json()(req, res, next);
+  }
+});
 app.use(cors({ origin: true, credentials: true }));
 app.use(cookieParser());
 
