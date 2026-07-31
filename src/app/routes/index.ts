@@ -7,13 +7,15 @@ import { AdminRoutes } from '../modules/admin/admin.route';
 import { CategoryRoutes } from '../modules/category/category.route';
 import { ServiceRoutes } from '../modules/service/service.route';
 import { TechnicianRoutes } from '../modules/technician/technician.route';
+import { BookingRoutes } from '../modules/booking/booking.route';
 
 const moduleRoutes = [
   { path: '/auth', route: AuthRoutes },
   { path: '/admin', route: AdminRoutes },
   { path: '/categories', route: CategoryRoutes },
   { path: '/services', route: ServiceRoutes },
-  { path: '/technicians', route: TechnicianRoutes }
+  { path: '/technicians', route: TechnicianRoutes },
+  { path: '/bookings', route: BookingRoutes }
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));
