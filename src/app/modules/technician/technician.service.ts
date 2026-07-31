@@ -4,7 +4,14 @@ import { Role } from '@prisma/client';
 const getAllTechnicians = async () => {
   const technicians = await prisma.user.findMany({
     where: { role: Role.TECHNICIAN },
-    include: {
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      isBanned: true,
+      createdAt: true,
+      updatedAt: true,
       technicianProfile: true,
     },
   });
@@ -14,7 +21,14 @@ const getAllTechnicians = async () => {
 const getTechnicianById = async (id: string) => {
   const technician = await prisma.user.findUnique({
     where: { id, role: Role.TECHNICIAN },
-    include: {
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      isBanned: true,
+      createdAt: true,
+      updatedAt: true,
       technicianProfile: true,
       services: true,
     },
