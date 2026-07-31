@@ -39,7 +39,34 @@ const createPaymentIntent = async (bookingId: string) => {
 };
 
 const handleWebhook = async (payload: Buffer, signature: string) => {
-  return null;
+  let event: Stripe.Event;
+
+  try {
+    event = stripe.webhooks.constructEvent(payload, signature, config.stripe_secret_key as string);
+  } catch (err: any) {
+    throw new Error(`Webhook Error: ${err.message}`);
+  }
+
+  if (event.type === 'payment_intent.succeeded') {
+    const paymentIntent = event.data.object as Stripe.PaymentIntent;
+    const bookingId = paymentIntent.metadata.bookingId;
+
+    await prisma.payment.update({
+      where: { bookingId },
+      data: {
+        status: 'COMPLETED',
+        transactionId: paymentIntent.id,
+        paidAt: new Date(),
+      },
+    });
+
+    await prisma.booking.update({
+      where: { id: bookingId },
+      data: { status: 'PAID' },
+    });
+  }
+
+  return { received: true };
 };
 
 export const PaymentService = {
